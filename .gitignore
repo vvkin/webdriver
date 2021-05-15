@@ -1,0 +1,8 @@
+# vscode config
+.vscode
+
+# python cache
+__pycache__
+
+# webdriver logs
+geckodriver.log
