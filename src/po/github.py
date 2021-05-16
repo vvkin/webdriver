@@ -2,7 +2,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
-from po.base import BasePO
+from src.po.base import BasePO
+from src.helpers.parse_ci import parse_int
 
 
 class GithubPO(BasePO):
@@ -15,9 +16,11 @@ class GithubPO(BasePO):
         element.send_keys(Keys.ENTER)
 
     def get_related_topic(self) -> str:
-        selector = 'div.codesearch-results h3.mb-1'
-        element = self.get_by_css(selector)
-        return element.text
+        try:
+            selector = 'div.codesearch-results h3.mb-1'
+            element = self.get_by_css(selector)
+            return element.text
+        except: return 'Not specified'
 
     def __get_nth_repo(self, repo_number: int) -> WebElement:
         selector = f'ul.repo-list :nth-child({repo_number})'
@@ -39,12 +42,12 @@ class GithubPO(BasePO):
     def get_repo_count_from_menu(self) -> int:
         selector = 'span.js-codesearch-count[data-search-type="Repositories"]'
         element = self.get_by_css(selector)
-        return int(element.text)
+        return parse_int(element.text)
 
     def get_repo_count_from_search(self) -> int:
         selector = 'div.codesearch-results h3:not(.mb-1)'
         element = self.get_by_css(selector)
-        return int(element.text.split()[0])
+        return parse_int(element.text.split()[0])
 
     def get_related_languages(self) -> list[str]:
         lang_list = self.get_by_css('ul.filter-list')
