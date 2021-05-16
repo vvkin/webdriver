@@ -10,13 +10,20 @@ class BasePO:
     def __init__(self, driver: WebDriver, url: str) -> None:
         self.driver = driver
         self.url = url
-    
+
     def get_wait(self, timeout: int) -> WebDriverWait:
         return WebDriverWait(self.driver, timeout)
 
     def wait(self, timeout: int) -> None:
         self.driver.implicitly_wait(timeout)
-    
+
+    def wait_for_redirect(self, timeout: int) -> None:
+        wait = self.get_wait(timeout)
+        prev_url = self.get_page_url()
+        condition = lambda driver: driver.title and\
+            driver.current_url != prev_url
+        wait.until(condition)
+
     def open_page(self) -> None:
         self.driver.get(self.url)
 

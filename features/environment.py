@@ -4,7 +4,7 @@ from src.po.github import GithubPO
 
 
 @fixture
-def init_firefox_driver(context) -> None:
+def init_firefox_driver(context):
     driver = webdriver.Firefox()
     github = GithubPO(driver)
     context.github = github
@@ -14,5 +14,5 @@ def init_firefox_driver(context) -> None:
     driver.quit()
 
 
-def before_all(context) -> None:
+def before_all(context):
     use_fixture(init_firefox_driver, context)
