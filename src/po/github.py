@@ -2,6 +2,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
 from src.po.base import BasePO
 from src.helpers.parse_ci import parse_int
 
@@ -14,6 +15,10 @@ class GithubPO(BasePO):
         element = self.get_by_css('input[name="q"]')
         element.send_keys(query)
         element.send_keys(Keys.ENTER)
+    
+    def wait_for_search(self, timeout: str) -> None:
+        wait = self.get_wait(timeout)
+        wait.until(EC.url_contains('q'))
 
     def get_related_topic(self) -> str:
         try:

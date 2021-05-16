@@ -10,10 +10,13 @@ class BasePO:
     def __init__(self, driver: WebDriver, url: str) -> None:
         self.driver = driver
         self.url = url
+    
+    def get_wait(self, timeout: int) -> WebDriverWait:
+        return WebDriverWait(self.driver, timeout)
 
     def wait(self, timeout: int) -> None:
         self.driver.implicitly_wait(timeout)
-
+    
     def open_page(self) -> None:
         self.driver.get(self.url)
 
@@ -25,7 +28,7 @@ class BasePO:
 
     def __get_by_locator(self, locator: tuple[str, str], timeout: int) -> WebElement:
         try:
-            wait = WebDriverWait(self.driver, timeout)
+            wait = self.get_wait(timeout)
             return wait.until(EC.presence_of_element_located(locator))
         except TimeoutException:
             raise Exception('Could not find element')

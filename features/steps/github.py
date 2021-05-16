@@ -11,13 +11,15 @@ def step_impl(context):
 @when('I enter the {query} repository')
 def step_impl(context, query: str):
     context.github.search(query)
+    context.github.wait_for_search(5)
 
 @then('I am being redirected to the page with {query} results')
 def step_impl(context, query: str):
-    expected_title = f'Search · {query}'
-    expected_url = f'https://github.com/search?q={quote(query)}'
-    # assert context.github.get_page_title() == expected_title
-    # assert context.github.get_page_url() == expected_url
+    expected_title = f'Search · {query} · GitHub'
+    query_quoted = quote(query, safe="")
+    expected_url = f'https://github.com/search?q={query_quoted}'
+    assert context.github.get_page_url().startswith(expected_url)
+    assert context.github.get_page_title() == expected_title
 
 @then('repositories number is greater than null')
 def step_impl(context):

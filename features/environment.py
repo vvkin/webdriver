@@ -7,7 +7,6 @@ from src.po.github import GithubPO
 def init_firefox_driver(context) -> None:
     driver = webdriver.Firefox()
     github = GithubPO(driver)
-    github.wait(1)
     context.github = github
 
     yield context
