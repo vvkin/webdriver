@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -33,15 +32,14 @@ class BasePO:
     def get_page_url(self) -> str:
         return self.driver.current_url
 
-    def __get_by_locator(self, locator: tuple[str, str], timeout: int) -> WebElement:
+    def get_all(self, locator: tuple[str, str], timeout: int = 0) -> WebElement:
         try:
             wait = self.get_wait(timeout)
-            return wait.until(EC.presence_of_element_located(locator))
+            elements = wait.until(EC.presence_of_all_elements_located(locator))
+            return elements
         except TimeoutException:
             raise Exception('Could not find element')
 
-    def get_by_css(self, selector: str, timeout: int = 0) -> WebElement:
-        return self.__get_by_locator((By.CSS_SELECTOR, selector), timeout)
-
-    def get_by_xpath(self, xpath: str, timeout: int = 0) -> WebElement:
-        return self.__get_by_locator((By.XPATH, xpath), timeout)
+    def get_one(self, locator: tuple[str, str], timeout: int = 0) -> WebElement:
+        elements = self.get_all(locator, timeout)
+        return elements[0]
